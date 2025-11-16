@@ -15,7 +15,7 @@ public class ConsoleInteractionTest {
     @Test
     public void getAnswerInGameInfoLidiaTest() {
         Game game = new Game();
-        String result = game.processCommandInGame("/info Лидия Черткова");
+        String result = game.processCommandInGame("/info_lidia");
         String expected = String.format("--- Информация о %s %s --- \n%s лет \nРод занятий: %s \nОписание: %s \nМотив: %s", Strings.lidia);
         Assertions.assertEquals(expected, result);
     }
@@ -23,7 +23,7 @@ public class ConsoleInteractionTest {
     @Test
     public void getAnswerInGameInfoAnnaTest() {
         Game game = new Game();
-        String result = game.processCommandInGame("/info Анна Воронова");
+        String result = game.processCommandInGame("/info_anna");
         String expected = String.format("--- Информация о %s %s --- \n%s лет \nРод занятий: %s \nОписание: %s \nМотив: %s", Strings.anna);
         Assertions.assertEquals(expected, result);
     }
@@ -31,7 +31,7 @@ public class ConsoleInteractionTest {
     @Test
     public void getAnswerInGameInfoDmitriyTest() {
         Game game = new Game();
-        String result = game.processCommandInGame("/info Дмитрий Орлов");
+        String result = game.processCommandInGame("/info_dmitriy");
         String expected = String.format("--- Информация о %s %s --- \n%s лет \nРод занятий: %s \nОписание: %s \nМотив: %s", Strings.dmitriy);
         Assertions.assertEquals(expected, result);
     }
@@ -39,7 +39,7 @@ public class ConsoleInteractionTest {
     @Test
     public void getAnswerInGameInfoPetrTest() {
         Game game = new Game();
-        String result = game.processCommandInGame("/info Пётр Воронов");
+        String result = game.processCommandInGame("/info_petr");
         String expected = String.format("--- Информация о %s %s --- \n%s лет \nРод занятий: %s \nОписание: %s \nМотив: %s", Strings.petr);
         Assertions.assertEquals(expected, result);
     }
@@ -47,16 +47,9 @@ public class ConsoleInteractionTest {
     @Test
     public void getAnswerInGameInfoGrigoriyTest() {
         Game game = new Game();
-        String result = game.processCommandInGame("/info Григорий Жаров");
+        String result = game.processCommandInGame("/info_grigoriy");
         String expected = String.format("--- Информация о %s %s --- \n%s лет \nРод занятий: %s \nОписание: %s \nМотив: %s", Strings.grigoriy);
         Assertions.assertEquals(expected, result);
-    }
-
-    @Test
-    public void getAnswerInGameInfoIncorrectNameTest() {
-        Game game = new Game();
-        String result = game.processCommandInGame("/info Иван Иванов");
-        Assertions.assertEquals("Такого персонажа не существует", result);
     }
 
     @Test
@@ -90,6 +83,13 @@ public class ConsoleInteractionTest {
     @Test
     public void getAnswerBeforeStartTest() {
         ProcessCommand processCommand = new ProcessCommand();
+        String result = processCommand.getAnswerBeforeGame("/start");
+        Assertions.assertEquals(Strings.helloMessage, result);
+    }
+
+    @Test
+    public void getAnswerBeforeStartGameTest() {
+        ProcessCommand processCommand = new ProcessCommand();
         String result = processCommand.getAnswerBeforeGame("/start_game");
         Assertions.assertEquals("Игра началась", result);
     }
@@ -101,4 +101,3 @@ public class ConsoleInteractionTest {
         Assertions.assertEquals("Такой команды не существует", result);
     }
 }
-

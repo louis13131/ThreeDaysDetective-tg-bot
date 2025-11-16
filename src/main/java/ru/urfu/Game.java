@@ -7,6 +7,8 @@ public class Game {
     private Victim petrVoronov;
     private Victim grigoriyZharov;
 
+    private boolean isRunning = false;
+
     public Game(){
         lidiaChertkova = new Killer(Strings.lidia);
         dmitriyOrlov = new Victim(Strings.dmitriy);
@@ -20,36 +22,23 @@ public class Game {
     }
 
     public String processCommandInGame(String instruction){
-        String[] parts = stringParsing(instruction);
-        String comand = parts[0];
-        String argument = (parts.length > 1) ? parts[1] : "";
         String answer = "";
-        switch (comand) {
-            case "/info":
-
-                switch (argument) {
-                    case "Лидия Черткова":
-                        answer = lidiaChertkova.getInfo();
-                        break;
-                    case "Дмитрий Орлов":
-                        answer = dmitriyOrlov.getInfo();
-                        break;
-                    case "Анна Воронова":
-                        answer = annaVoronova.getInfo();
-                        break;
-                    case "Пётр Воронов":
-                        answer = petrVoronov.getInfo();
-                        break;
-                    case "Григорий Жаров":
-                        answer = grigoriyZharov.getInfo();
-                        break;
-                    default:
-                        answer = "Такого персонажа не существует";
-
-
-                }
+        switch (instruction) {
+            case "/info_lidia":
+                answer = lidiaChertkova.getInfo();
                 break;
-
+            case "/info_dmitriy":
+                answer = dmitriyOrlov.getInfo();
+                break;
+            case "/info_anna":
+                answer = annaVoronova.getInfo();
+                break;
+            case "/info_petr":
+                answer = petrVoronov.getInfo();
+                break;
+            case "/info_grigoriy":
+                answer = grigoriyZharov.getInfo();
+                break;
             case "/help":
                 answer = Strings.helpMessage;
                 break;
@@ -64,5 +53,14 @@ public class Game {
                 answer = "Такой команды не существует";
         }
         return answer;
+    }
+
+
+    public void setGameStatus(boolean isRunning){
+        this.isRunning = isRunning;
+    }
+
+    public boolean getGameStatus(){
+        return isRunning;
     }
 }

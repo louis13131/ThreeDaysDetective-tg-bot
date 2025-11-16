@@ -11,6 +11,9 @@ public class ProcessCommand {
             case "/start_game":
                 answer = "Игра началась";
                 break;
+            case "/start":
+                answer = Strings.helloMessage;
+                break;
 
             default:
                 answer = "Такой команды не существует";
