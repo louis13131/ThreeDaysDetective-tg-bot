@@ -54,6 +54,16 @@ public class Game {
             case "/exit":
                 answer = "Игра завершена";
                 break;
+            case "/blame_lidia": //Специально проваливаемся вниз, чтобы попасть в default при невыполнении условия
+                if (currentDay == Day.DAY3) {
+                    answer = Strings.victoryMessage;
+                    break;
+                }
+            case "/blame_dmitriy", "/blame_anna":
+                if (currentDay == Day.DAY3) {
+                    answer = Strings.defeatMessage;
+                    break;
+                }
 
             default:
                 answer = "Такой команды не существует";
@@ -68,6 +78,14 @@ public class Game {
 
         String answer = Strings.dailyMessage[currentDay.ordinal()];
         currentDay = currentDay.next();
+
+        if  (currentDay == Day.DAY2){
+            grigoriyZharov.setStatusToDead();
+        }
+        else {
+            petrVoronov.setStatusToDead();
+        }
+
         return answer;
     }
 
