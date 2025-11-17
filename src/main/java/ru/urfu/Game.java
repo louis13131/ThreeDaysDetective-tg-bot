@@ -7,6 +7,8 @@ public class Game {
     private Victim petrVoronov;
     private Victim grigoriyZharov;
 
+    private Day currentDay;
+
     private boolean isRunning = false;
 
     public Game(){
@@ -15,6 +17,7 @@ public class Game {
         annaVoronova = new Victim(Strings.anna);
         petrVoronov = new Victim(Strings.petr);
         grigoriyZharov = new Victim(Strings.grigoriy);
+        currentDay = Day.DAY1;
     }
 
     private String[] stringParsing(String instruction){
@@ -22,7 +25,7 @@ public class Game {
     }
 
     public String processCommandInGame(String instruction){
-        String answer = "";
+        String answer;
         switch (instruction) {
             case "/info_lidia":
                 answer = lidiaChertkova.getInfo();
@@ -45,6 +48,9 @@ public class Game {
             case "/start_game":
                 answer = "Игра уже началась";
                 break;
+            case "/end_the_day":
+                answer = endTheDay();
+                break;
             case "/exit":
                 answer = "Игра завершена";
                 break;
@@ -55,6 +61,15 @@ public class Game {
         return answer;
     }
 
+    public String endTheDay(){
+        if (currentDay == Day.DAY3){
+            return "Это последний день";
+        }
+
+        String answer = Strings.dailyMessage[currentDay.ordinal()];
+        currentDay = currentDay.next();
+        return answer;
+    }
 
     public void setGameStatus(boolean isRunning){
         this.isRunning = isRunning;
