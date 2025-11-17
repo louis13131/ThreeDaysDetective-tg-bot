@@ -16,4 +16,7 @@ public class Victim extends Human{
     public Status getStatus() {
         return currentStatus;
     }
+    public void setStatusToDead() {
+        currentStatus = Status.DEAD;
+    }
 }
