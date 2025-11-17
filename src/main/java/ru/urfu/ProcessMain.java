@@ -29,7 +29,7 @@ public class ProcessMain
                     answer = game.processCommandInGame(instruction);
                     consoleInteraction.print(answer);
 
-                    if  (answer.equals("Игра завершена")) {
+                    if  (answer.equals("Игра завершена") || answer.equals(Strings.defeatMessage) ||  answer.equals(Strings.victoryMessage)) {
                         break;
                     }
                 }

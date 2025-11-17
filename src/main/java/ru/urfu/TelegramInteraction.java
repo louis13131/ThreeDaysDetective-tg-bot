@@ -45,7 +45,7 @@ public class TelegramInteraction extends TelegramLongPollingBot {
             if (games.get(chatId).getGameStatus()) {
                 text = currentGame.processCommandInGame(messageText);
 
-                if (text.equals("Игра завершена")){
+                if (text.equals("Игра завершена") || text.equals(Strings.defeatMessage) ||  text.equals(Strings.victoryMessage)) {
                     currentGame.setGameStatus(false);
                 }
             }
