@@ -6,11 +6,11 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 public class ProcessMain
 {
-    public void run(String running) throws TelegramApiException {
+    public void run(String token, String running) throws TelegramApiException {
 
         if (running.equals("telegram") || running.equals("both")) {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-            botsApi.registerBot(new TelegramInteraction());
+            botsApi.registerBot(new TelegramInteraction(token));
         }
 
         if (running.equals("console") || running.equals("both")) {
