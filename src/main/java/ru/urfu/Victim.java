@@ -1,7 +1,7 @@
 package ru.urfu;
 
 public class Victim extends Human{
-    private enum Status{
+    public enum Status{
         ALIVE,
         DEAD
     }
