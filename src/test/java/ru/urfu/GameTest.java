@@ -124,4 +124,84 @@ public class GameTest {
         String result = game.processCommandInGame("/blame_lidia");
         Assertions.assertEquals("Такой команды не существует", result);
     }
+
+    @Test
+    public void getAnswerInGameTalkLidiaTest() {
+        Game game = new Game();
+        String result = game.processCommandInGame("/talk_lidia");
+        String expected = Strings.lidiaDialoguesByDay[0];
+        Assertions.assertEquals(expected, result);
+        game.endTheDay();
+        result = game.processCommandInGame("/talk_lidia");
+        expected = Strings.lidiaDialoguesByDay[1];
+        Assertions.assertEquals(expected, result);
+        game.endTheDay();
+        result = game.processCommandInGame("/talk_lidia");
+        expected = Strings.lidiaDialoguesByDay[2];
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    public void getAnswerInGameTalkAnnaTest() {
+        Game game = new Game();
+        String result = game.processCommandInGame("/talk_anna");
+        String expected = Strings.annaDialoguesByDay[0];
+        Assertions.assertEquals(expected, result);
+        game.endTheDay();
+        result = game.processCommandInGame("/talk_anna");
+        expected = Strings.annaDialoguesByDay[1];
+        Assertions.assertEquals(expected, result);
+        game.endTheDay();
+        result = game.processCommandInGame("/talk_anna");
+        expected = Strings.annaDialoguesByDay[2];
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    public void getAnswerInGameTalkDmitriyTest() {
+        Game game = new Game();
+        String result = game.processCommandInGame("/talk_dmitriy");
+        String expected = Strings.dmitriyDialoguesByDay[0];
+        Assertions.assertEquals(expected, result);
+        game.endTheDay();
+        result = game.processCommandInGame("/talk_dmitriy");
+        expected = Strings.dmitriyDialoguesByDay[1];
+        Assertions.assertEquals(expected, result);
+        game.endTheDay();
+        result = game.processCommandInGame("/talk_dmitriy");
+        expected = Strings.dmitriyDialoguesByDay[2];
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    public void getAnswerInGameTalkPetrTest() {
+        Game game = new Game();
+        String result = game.processCommandInGame("/talk_petr");
+        String expected = Strings.petrDialoguesByDay[0];
+        Assertions.assertEquals(expected, result);
+        game.endTheDay();
+        result = game.processCommandInGame("/talk_petr");
+        expected = Strings.petrDialoguesByDay[1];
+        Assertions.assertEquals(expected, result);
+        game.endTheDay();
+        result = game.processCommandInGame("/talk_petr");
+        expected = Strings.deathMessage;
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    public void getAnswerInGameTalkGrigoriyTest() {
+        Game game = new Game();
+        String result = game.processCommandInGame("/talk_grigoriy");
+        String expected = Strings.grigoriyDialoguesByDay[0];
+        Assertions.assertEquals(expected, result);
+        game.endTheDay();
+        result = game.processCommandInGame("/talk_grigoriy");
+        expected = Strings.deathMessage;
+        Assertions.assertEquals(expected, result);
+        game.endTheDay();
+        result = game.processCommandInGame("/talk_grigoriy");
+        expected = Strings.deathMessage;
+        Assertions.assertEquals(expected, result);
+    }
 }
