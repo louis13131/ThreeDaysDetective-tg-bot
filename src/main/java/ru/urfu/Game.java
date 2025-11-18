@@ -48,6 +48,27 @@ public class Game {
             case "/start_game":
                 answer = "Игра уже началась";
                 break;
+            case "/talk_lidia":
+                answer = Strings.lidiaDialoguesByDay[currentDay.ordinal()];
+                break;
+            case "/talk_dmitriy":
+                answer = Strings.dmitriyDialoguesByDay[currentDay.ordinal()];
+                break;
+            case "/talk_anna":
+                answer = Strings.annaDialoguesByDay[currentDay.ordinal()];
+                break;
+            case "/talk_petr":
+                if(petrVoronov.getStatus() == Victim.Status.ALIVE){
+                    answer = Strings.petrDialoguesByDay[currentDay.ordinal()];
+                }
+                else answer = Strings.deathMessage;
+                break;
+            case "/talk_grigoriy":
+                if(grigoriyZharov.getStatus() == Victim.Status.ALIVE){
+                    answer = Strings.grigoriyDialoguesByDay[currentDay.ordinal()];
+                }
+                else answer = Strings.deathMessage;
+                break;
             case "/end_the_day":
                 answer = endTheDay();
                 break;
