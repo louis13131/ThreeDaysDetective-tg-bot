@@ -6,31 +6,36 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 public class ProcessMain
 {
-    public void run() throws TelegramApiException {
-        TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-        botsApi.registerBot(new TelegramInteraction());
+    public void run(String token, String running) throws TelegramApiException {
 
-        ConsoleInteraction helloMessage = new ConsoleInteraction();
-        helloMessage.print(Strings.helloMessage);
-        ConsoleInteraction consoleInteraction = new ConsoleInteraction() ;
-        ProcessCommand processCommand = new ProcessCommand();
+        if (running.equals("telegram") || running.equals("both")) {
+            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+            botsApi.registerBot(new TelegramInteraction(token));
+        }
 
-        while(true){
-            consoleInteraction.print("Введите команду: ");
-            String instruction = consoleInteraction.getCommand();
-            String answer = processCommand.getAnswerBeforeGame(instruction);
-            consoleInteraction.print(answer);
-            if (answer.equals("Игра началась")){
-                Game game = new Game();
-                consoleInteraction.print(Strings.welcomeMessage);
-                while (true) {
-                    consoleInteraction.print("Введите команду: ");
-                    instruction = consoleInteraction.getCommand();
-                    answer = game.processCommandInGame(instruction);
-                    consoleInteraction.print(answer);
+        if (running.equals("console") || running.equals("both")) {
+            ConsoleInteraction helloMessage = new ConsoleInteraction();
+            helloMessage.print(Strings.helloMessage);
+            ConsoleInteraction consoleInteraction = new ConsoleInteraction();
+            ProcessCommand processCommand = new ProcessCommand();
 
-                    if  (answer.equals("Игра завершена")) {
-                        break;
+            while (true) {
+                consoleInteraction.print("Введите команду: ");
+                String instruction = consoleInteraction.getCommand();
+                String answer = processCommand.getAnswerBeforeGame(instruction);
+                consoleInteraction.print(answer);
+                if (answer.equals("Игра началась")) {
+                    Game game = new Game();
+                    consoleInteraction.print(Strings.welcomeMessage);
+                    while (true) {
+                        consoleInteraction.print("Введите команду: ");
+                        instruction = consoleInteraction.getCommand();
+                        answer = game.processCommandInGame(instruction);
+                        consoleInteraction.print(answer);
+
+                        if (answer.equals("Игра завершена") || answer.equals(Strings.defeatMessage) || answer.equals(Strings.victoryMessage)) {
+                            break;
+                        }
                     }
                 }
             }

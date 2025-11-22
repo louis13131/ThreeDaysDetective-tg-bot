@@ -10,9 +10,10 @@ import java.util.HashMap;
 public class TelegramInteraction extends TelegramLongPollingBot {
 
     HashMap<String, Game> games;
+    private String token;
 
-    TelegramInteraction() {
-
+    TelegramInteraction(String token) {
+        this.token = token;
         this.games = new HashMap<>();
     }
 
@@ -23,7 +24,7 @@ public class TelegramInteraction extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "8358705799:AAGnAFS3FhIZ-I0SLgHDmMhSDRhM8dZUOLg";
+        return token;
     }
 
     @Override
@@ -45,7 +46,7 @@ public class TelegramInteraction extends TelegramLongPollingBot {
             if (games.get(chatId).getGameStatus()) {
                 text = currentGame.processCommandInGame(messageText);
 
-                if (text.equals("Игра завершена")){
+                if (text.equals("Игра завершена") || text.equals(Strings.defeatMessage) ||  text.equals(Strings.victoryMessage)) {
                     currentGame.setGameStatus(false);
                 }
             }
