@@ -85,6 +85,9 @@ public class Game {
                     answer = Strings.defeatMessage;
                     break;
                 }
+            case"/inspect":
+                answer = Strings.evidence[currentDay.ordinal()];
+                break;
 
             default:
                 answer = "Такой команды не существует";
