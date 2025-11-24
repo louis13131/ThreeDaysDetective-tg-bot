@@ -12,6 +12,7 @@ public class Game {
     String prevCommand;
     private boolean isRunning = false;
     private boolean waitingForName = false;
+    private boolean flagDayShift = false;
 
     public Game(){
         lidiaChertkova = new Killer(Strings.lidia);
@@ -46,10 +47,28 @@ public class Game {
         String answer = switch (instruction){
             case "/help" -> Strings.helpMessage;
             case "/start_game" -> "Игра уже началась";
-            case"/inspect" -> Strings.evidence[currentDay.ordinal()];
-            case "/end_the_day" -> endTheDay();
+            case "/inspect" -> {
+                if (!flagDayShift){
+                    flagDayShift = true;
+                    yield Strings.inspection[currentDay.ordinal()];
+                }
+                else{
+                    yield "Вы уже нашли все улики";
+                }
+            }
+            case "/clue" -> {
+                if (!flagDayShift) {
+                    yield "Вы ещё не нашли улик";
+                } else {
+                    yield Strings.evidence[currentDay.ordinal()];
+                }
+            }
+            case "/end_the_day" -> {
+                flagDayShift = false;
+                yield endTheDay();
+            }
             case "/exit" -> "Игра завершена";
-            default -> "Такой команды не существует";
+            default ->  "Такой команды не существует";
         };
 
         return answer;
