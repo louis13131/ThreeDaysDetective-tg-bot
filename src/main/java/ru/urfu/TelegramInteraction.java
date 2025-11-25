@@ -139,28 +139,33 @@ public class TelegramInteraction extends TelegramLongPollingBot {
         KeyboardButton button2 = new KeyboardButton("/info");
         KeyboardButton button3 = new KeyboardButton("/talk");
         KeyboardButton button4 = new KeyboardButton("/inspect");
+        KeyboardButton button5 = new KeyboardButton("/clue");
 
-        KeyboardRow[] rows = new KeyboardRow[2];
+        KeyboardRow[] rows = new KeyboardRow[3];
         rows[0] = new KeyboardRow();
         rows[1] = new KeyboardRow();
+        rows[2] = new  KeyboardRow();
 
         rows[0].add(button1);
         rows[0].add(button2);
         rows[0].add(button3);
         rows[1].add(button4);
+        rows[1].add(button5);
+
 
         Game currentGame = games.get(chatId);
         if (currentGame.getCurrentDay() == Day.DAY3) {
-            KeyboardButton button5 = new KeyboardButton("/blame");
-            rows[1].add(button5);
-        }
-        if (currentGame.getCurrentDay() != Day.DAY3) {
-            KeyboardButton button6 = new KeyboardButton("/end_the_day");
+            KeyboardButton button6 = new KeyboardButton("/blame");
             rows[1].add(button6);
         }
+        if (currentGame.getCurrentDay() != Day.DAY3) {
+            KeyboardButton button7 = new KeyboardButton("/end_the_day");
+            rows[1].add(button7);
+        }
+
 
         KeyboardButton exitButton = new KeyboardButton(("/exit"));
-        rows[1].add(exitButton);
+        rows[2].add(exitButton);
 
         sendMessageWithButtons(rows, text, chatId);
     }
