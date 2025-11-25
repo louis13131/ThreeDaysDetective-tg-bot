@@ -116,7 +116,7 @@ public class Game {
                 }
                 yield Strings.deathMessage;
             }
-            default -> "Такого персонажа не сущесвует";
+            default -> "Такого персонажа не существует";
         };
         return answer;
     }
@@ -127,6 +127,7 @@ public class Game {
                 case "lidia", "Lidia" -> Strings.victoryMessage;
                 case "dmitriy", "Dmitriy" -> Strings.defeatMessage;
                 case "anna", "Anna" -> Strings.defeatMessage;
+                case "petr", "Petr", "grigoriy", "Grigoriy" -> "Этот персонаж мёртв, его нельзя обвинить";
                 default -> "Такого персонажа не существует";
             };
             return answer;
@@ -136,12 +137,15 @@ public class Game {
     }
 
     public String endTheDay(){
-        if (currentDay == Day.DAY3){
+        String answer;
+
+        try {
+            currentDay = currentDay.next();
+        } catch (Exception e) {
             return "Это последний день";
         }
 
-        String answer = Strings.dailyMessage[currentDay.ordinal()];
-        currentDay = currentDay.next();
+        answer = Strings.dailyMessage[currentDay.ordinal()-1];
 
         if  (currentDay == Day.DAY2){
             grigoriyZharov.setStatusToDead();
