@@ -116,7 +116,7 @@ public class Game {
                 }
                 yield Strings.deathMessage;
             }
-            default -> "Такого персонажа не сущесвует";
+            default -> "Такого персонажа не существует";
         };
         return answer;
     }
@@ -127,6 +127,7 @@ public class Game {
                 case "lidia", "Lidia" -> Strings.victoryMessage;
                 case "dmitriy", "Dmitriy" -> Strings.defeatMessage;
                 case "anna", "Anna" -> Strings.defeatMessage;
+                case "petr", "Petr", "grigoriy", "Grigoriy" -> "Этот персонаж мёртв, его нельзя обвинить";
                 default -> "Такого персонажа не существует";
             };
             return answer;
