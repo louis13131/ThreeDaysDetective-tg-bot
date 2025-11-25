@@ -10,6 +10,7 @@ public class Game {
     private Day currentDay;
 
     String prevCommand;
+    String evidence = "";
     private boolean isRunning = false;
     private boolean waitingForName = false;
     private boolean flagDayShift = false;
@@ -50,17 +51,18 @@ public class Game {
             case "/inspect" -> {
                 if (!flagDayShift){
                     flagDayShift = true;
+                    evidence += Strings.evidence[currentDay.ordinal()];
                     yield Strings.inspection[currentDay.ordinal()];
                 }
                 else{
-                    yield "Вы уже нашли все улики";
+                    yield "Вы уже нашли все улики сегодня";
                 }
             }
             case "/clue" -> {
-                if (!flagDayShift) {
+                if ("".equals(evidence)) {
                     yield "Вы ещё не нашли улик";
-                } else {
-                    yield Strings.evidence[currentDay.ordinal()];
+                } else {;
+                    yield evidence;
                 }
             }
             case "/end_the_day" -> {
