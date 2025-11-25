@@ -94,7 +94,7 @@ public class Game {
             case "anna", "Anna" -> annaVoronova.getInfo();
             case "petr", "Petr" -> petrVoronov.getInfo();
             case "grigoriy", "Grigoriy" -> grigoriyZharov.getInfo();
-            default -> "Такого персонажа не сущесвует";
+            default -> "Такого персонажа не существует";
         };
         return answer;
     }
