@@ -136,12 +136,15 @@ public class Game {
     }
 
     public String endTheDay(){
-        if (currentDay == Day.DAY3){
+        String answer;
+
+        try {
+            currentDay = currentDay.next();
+        } catch (Exception e) {
             return "Это последний день";
         }
 
-        String answer = Strings.dailyMessage[currentDay.ordinal()];
-        currentDay = currentDay.next();
+        answer = Strings.dailyMessage[currentDay.ordinal()-1];
 
         if  (currentDay == Day.DAY2){
             grigoriyZharov.setStatusToDead();
