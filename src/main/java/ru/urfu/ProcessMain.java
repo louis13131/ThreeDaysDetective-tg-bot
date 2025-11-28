@@ -31,6 +31,13 @@ public class ProcessMain
                         consoleInteraction.print("Введите команду: ");
                         instruction = consoleInteraction.getCommand();
                         answer = game.processCommandInGame(instruction);
+
+                        if (answer.equals("Введите имя персонажа:")){
+                            consoleInteraction.print(answer);
+                            instruction = consoleInteraction.getCommand();
+                            answer = game.processCommandInGame(instruction);
+                        }
+
                         consoleInteraction.print(answer);
 
                         if (answer.equals("Игра завершена") || answer.equals(Strings.defeatMessage) || answer.equals(Strings.victoryMessage)) {

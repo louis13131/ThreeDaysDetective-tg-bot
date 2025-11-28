@@ -9,7 +9,11 @@ public class Game {
 
     private Day currentDay;
 
+    String prevCommand;
+    String evidence = "";
     private boolean isRunning = false;
+    private boolean waitingForName = false;
+    private boolean flagDayShift = false;
 
     public Game(){
         lidiaChertkova = new Killer(Strings.lidia);
@@ -20,85 +24,128 @@ public class Game {
         currentDay = Day.DAY1;
     }
 
-    private String[] stringParsing(String instruction){
-        return instruction.trim().split(" ", 2);
-    }
-
     public String processCommandInGame(String instruction){
-        String answer;
-        switch (instruction) {
-            case "/info_lidia":
-                answer = lidiaChertkova.getInfo();
-                break;
-            case "/info_dmitriy":
-                answer = dmitriyOrlov.getInfo();
-                break;
-            case "/info_anna":
-                answer = annaVoronova.getInfo();
-                break;
-            case "/info_petr":
-                answer = petrVoronov.getInfo();
-                break;
-            case "/info_grigoriy":
-                answer = grigoriyZharov.getInfo();
-                break;
-            case "/help":
-                answer = Strings.helpMessage;
-                break;
-            case "/start_game":
-                answer = "Игра уже началась";
-                break;
-            case "/talk_lidia":
-                answer = Strings.lidiaDialoguesByDay[currentDay.ordinal()];
-                break;
-            case "/talk_dmitriy":
-                answer = Strings.dmitriyDialoguesByDay[currentDay.ordinal()];
-                break;
-            case "/talk_anna":
-                answer = Strings.annaDialoguesByDay[currentDay.ordinal()];
-                break;
-            case "/talk_petr":
-                if(petrVoronov.getStatus() == Victim.Status.ALIVE){
-                    answer = Strings.petrDialoguesByDay[currentDay.ordinal()];
-                }
-                else answer = Strings.deathMessage;
-                break;
-            case "/talk_grigoriy":
-                if(grigoriyZharov.getStatus() == Victim.Status.ALIVE){
-                    answer = Strings.grigoriyDialoguesByDay[currentDay.ordinal()];
-                }
-                else answer = Strings.deathMessage;
-                break;
-            case "/end_the_day":
-                answer = endTheDay();
-                break;
-            case "/exit":
-                answer = "Игра завершена";
-                break;
-            case "/blame_lidia": //Специально проваливаемся вниз, чтобы попасть в default при невыполнении условия
-                if (currentDay == Day.DAY3) {
-                    answer = Strings.victoryMessage;
-                    break;
-                }
-            case "/blame_dmitriy", "/blame_anna":
-                if (currentDay == Day.DAY3) {
-                    answer = Strings.defeatMessage;
-                    break;
-                }
+        String answer = "";
 
-            default:
-                answer = "Такой команды не существует";
+        if (instruction.equals("/info") || instruction.equals("/talk") || instruction.equals("/blame")) {
+            waitingForName = true;
+            prevCommand = instruction;
+            return "Введите имя персонажа:";
         }
+
+        if (!waitingForName){
+            answer = processSingleCommand(instruction);
+        }
+        else {
+            answer = processCharacterCommand(prevCommand, instruction);
+            waitingForName = false;
+        }
+
         return answer;
     }
 
-    public String endTheDay(){
+    String processSingleCommand(String instruction){
+        String answer = switch (instruction){
+            case "/help" -> Strings.helpMessage;
+            case "/start_game" -> "Игра уже началась";
+            case "/inspect" -> {
+                if (!flagDayShift){
+                    flagDayShift = true;
+                    evidence += Strings.evidence[currentDay.ordinal()];
+                    yield Strings.inspection[currentDay.ordinal()];
+                }
+                else{
+                    yield "Вы уже нашли все улики сегодня";
+                }
+            }
+            case "/clue" -> {
+                if ("".equals(evidence)) {
+                    yield "Вы ещё не нашли улик";
+                } else {;
+                    yield evidence;
+                }
+            }
+            case "/end_the_day" -> {
+                flagDayShift = false;
+                yield endTheDay();
+            }
+            case "/exit" -> "Игра завершена";
+            default ->  "Такой команды не существует";
+        };
+
+        return answer;
+    }
+
+    String processCharacterCommand(String instruction, String name){
+        String answer = switch(instruction){
+            case "/info" -> infoAboutCharacter(name);
+            case "/talk" -> talkToCharacter(name);
+            case "/blame" -> blameCharacter(name);
+            default -> "Такого персонажа не существует";
+        };
+
+        return answer;
+    }
+
+    public String infoAboutCharacter(String name) {
+        String answer = switch (name) {
+            case "lidia", "Lidia" -> lidiaChertkova.getInfo();
+            case "dmitriy", "Dmitriy" -> dmitriyOrlov.getInfo();
+            case "anna", "Anna" -> annaVoronova.getInfo();
+            case "petr", "Petr" -> petrVoronov.getInfo();
+            case "grigoriy", "Grigoriy" -> grigoriyZharov.getInfo();
+            default -> "Такого персонажа не существует";
+        };
+        return answer;
+    }
+
+    public String talkToCharacter(String name){
+        String answer = switch (name) {
+            case "lidia", "Lidia" -> Strings.lidiaDialoguesByDay[currentDay.ordinal()];
+            case "dmitriy", "Dmitriy" -> Strings.dmitriyDialoguesByDay[currentDay.ordinal()];
+            case "anna", "Anna" -> Strings.annaDialoguesByDay[currentDay.ordinal()];
+            case "petr", "Petr" -> {
+                if(petrVoronov.getStatus() == Victim.Status.ALIVE){
+                    yield Strings.petrDialoguesByDay[currentDay.ordinal()];
+                }
+                yield Strings.deathMessage;
+            }
+            case "grigoriy", "Grigoriy" -> {
+                if(grigoriyZharov.getStatus() == Victim.Status.ALIVE){
+                    yield Strings.grigoriyDialoguesByDay[currentDay.ordinal()];
+                }
+                yield Strings.deathMessage;
+            }
+            default -> "Такого персонажа не существует";
+        };
+        return answer;
+    }
+
+    public String blameCharacter(String name){
         if (currentDay == Day.DAY3){
+            String answer = switch (name){
+                case "lidia", "Lidia" -> Strings.victoryMessage;
+                case "dmitriy", "Dmitriy" -> Strings.defeatMessage;
+                case "anna", "Anna" -> Strings.defeatMessage;
+                case "petr", "Petr", "grigoriy", "Grigoriy" -> "Этот персонаж мёртв, его нельзя обвинить";
+                default -> "Такого персонажа не существует";
+            };
+            return answer;
+        }
+
+        return "Вынести обвинение можно только на 3 день";
+    }
+
+    public String endTheDay(){
+        String answer;
+
+        try {
+            currentDay = currentDay.next();
+        } catch (Exception e) {
             return "Это последний день";
         }
 
-        String answer = Strings.dailyMessage[currentDay.ordinal()];
-        currentDay = currentDay.next();
+        answer = Strings.dailyMessage[currentDay.ordinal()-1];
 
         if  (currentDay == Day.DAY2){
             grigoriyZharov.setStatusToDead();
@@ -116,5 +163,17 @@ public class Game {
 
     public boolean getGameStatus(){
         return isRunning;
+    }
+
+    public Victim.Status getPetrStatus(){
+        return petrVoronov.getStatus();
+    }
+
+    public Victim.Status getGrigoriyStatus(){
+        return grigoriyZharov.getStatus();
+    }
+
+    public Day getCurrentDay(){
+        return currentDay;
     }
 }
