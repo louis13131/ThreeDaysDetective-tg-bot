@@ -8,8 +8,8 @@ public class Victim extends Human{
 
     private Status currentStatus;
 
-    protected Victim(String[] character) {
-        super(character);
+    protected Victim(String[] nameParts, String[] character) {
+        super(nameParts, character);
         currentStatus = Status.ALIVE;
     }
 

@@ -1,11 +1,14 @@
 package ru.urfu;
 
+import java.io.IOException;
+
 public class Game {
     private Killer lidiaChertkova;
     private Victim dmitriyOrlov;
     private Victim annaVoronova;
     private Victim petrVoronov;
     private Victim grigoriyZharov;
+    private NameGenerator nameGenerator;
 
     private Day currentDay;
 
@@ -15,12 +18,24 @@ public class Game {
     private boolean waitingForName = false;
     private boolean flagDayShift = false;
 
-    public Game(){
-        lidiaChertkova = new Killer(Strings.lidia);
-        dmitriyOrlov = new Victim(Strings.dmitriy);
-        annaVoronova = new Victim(Strings.anna);
-        petrVoronov = new Victim(Strings.petr);
-        grigoriyZharov = new Victim(Strings.grigoriy);
+    public Game() {
+        nameGenerator = new NameGenerator();
+
+        String[][] femaleNames = nameGenerator.generateFemaleNames();
+        String[][] maleNames = nameGenerator.generateMaleNames();
+
+        String familySurname = maleNames[0][1];
+
+        String[] familyFemaleName = femaleNames[1];
+        String[] familyMaleName = maleNames[2];
+        familyFemaleName[1] = familySurname;
+        familyMaleName[1] = familySurname;
+
+        lidiaChertkova = new Killer(femaleNames[0], Strings.lidia);
+        dmitriyOrlov = new Victim(maleNames[1], Strings.dmitriy);
+        annaVoronova = new Victim(familyFemaleName, Strings.anna);
+        petrVoronov = new Victim(familyMaleName, Strings.petr);
+        grigoriyZharov = new Victim(maleNames[3], Strings.grigoriy);
         currentDay = Day.DAY1;
     }
 

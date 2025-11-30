@@ -9,9 +9,9 @@ public abstract class Human {
     private final String impression;
     private final String reason;
 
-    protected Human(String[] character) {
-        this.name = character[0];
-        this.surname = character[1];
+    protected Human(String[] nameParts, String[] character) {
+        this.name = nameParts[0];
+        this.surname = nameParts[1];
         this.age = character[2];
         this.profession = character[3];
         this.impression = character[4];
