@@ -26,7 +26,7 @@ public class ProcessMain
                 consoleInteraction.print(answer);
                 if (answer.equals("Игра началась")) {
                     Game game = new Game();
-                    consoleInteraction.print(Strings.welcomeMessage);
+                    consoleInteraction.print(game.generateWelcomeMessage());
                     while (true) {
                         consoleInteraction.print("Введите команду: ");
                         instruction = consoleInteraction.getCommand();
