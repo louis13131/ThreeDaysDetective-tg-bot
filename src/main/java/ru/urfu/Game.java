@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 public class Game {
     private Killer killer;
     private String[] firstVictimFullName;
-    private RedHerring redHerring1;
-    private RedHerring redHerring2;
-    private Victim victim1;
-    private Victim victim2;
+    private RedHerring doctor;
+    private RedHerring wife;
+    private Victim partner;
+    private Victim brother;
     List<Human> characters;
     private NameGenerator nameGenerator;
 
@@ -37,12 +37,12 @@ public class Game {
 
         firstVictimFullName = maleNames[0];
         killer = new Killer(femaleNames[0], Strings.killer, Strings.killerDialoguesByDay);
-        redHerring1 = new RedHerring(maleNames[1], Strings.dmitriy, Strings.redHerring1DialoguesByDay);
-        redHerring2 = new RedHerring(familyFemaleName, Strings.anna, Strings.redHerring2DialoguesByDay);
-        victim1 = new Victim(maleNames[3], Strings.grigoriy, Strings.victim1DialoguesByDay);
-        victim2 = new Victim(familyMaleName, Strings.petr, Strings.victim2DialoguesByDay);
+        doctor = new RedHerring(maleNames[1], Strings.dmitriy, Strings.doctorDialoguesByDay);
+        wife = new RedHerring(familyFemaleName, Strings.anna, Strings.wifeDialoguesByDay);
+        partner = new Victim(maleNames[3], Strings.grigoriy, Strings.partnerDialoguesByDay);
+        brother = new Victim(familyMaleName, Strings.petr, Strings.brotherDialoguesByDay);
 
-        characters = List.of(killer, redHerring1, redHerring2, victim1, victim2);
+        characters = List.of(killer, doctor, wife, partner, brother);
 
         currentDay = Day.DAY1;
     }
@@ -164,10 +164,10 @@ public class Game {
         answer = generateDailyMessage();
 
         if  (currentDay == Day.DAY2){
-            victim1.setStatusToDead();
+            partner.setStatusToDead();
         }
         else {
-            victim2.setStatusToDead();
+            brother.setStatusToDead();
         }
 
         return answer;
@@ -184,10 +184,10 @@ public class Game {
         String dailyMessage = "";
 
         if (currentDay == Day.DAY2){
-            dailyMessage = String.format(currentDayMessageTemplate, victim1.getFullName());
+            dailyMessage = String.format(currentDayMessageTemplate, partner.getFullName());
         }
         if (currentDay == Day.DAY3){
-            dailyMessage = String.format(currentDayMessageTemplate, victim2.getFullName());
+            dailyMessage = String.format(currentDayMessageTemplate, brother.getFullName());
         }
         return dailyMessage;
     }
@@ -225,11 +225,11 @@ public class Game {
     }
 
     public Victim.Status getVictim1Status(){
-        return victim1.getStatus();
+        return partner.getStatus();
     }
 
     public Victim.Status getVictim2Status(){
-        return victim2.getStatus();
+        return brother.getStatus();
     }
 
     public Day getCurrentDay(){
