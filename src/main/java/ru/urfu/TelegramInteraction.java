@@ -54,8 +54,7 @@ public class TelegramInteraction extends TelegramLongPollingBot {
 
                 if (text.equals("Введите имя персонажа:")){
                     sendMessageWithCharacterButtons(text, chatId);
-                }
-                if (waitingForAnswer.contains(chatId)) {
+                }else if (waitingForAnswer.contains(chatId)) {
                     String answer = messageText;
                     String riddle = currentRiddle.get(chatId);
 
@@ -69,11 +68,8 @@ public class TelegramInteraction extends TelegramLongPollingBot {
                         waitingForAnswer.remove(chatId);
                         currentRiddle.remove(chatId);
                     }
-                    return; // Выходим, не обрабатываем дальше
-                }
-
-                // 2. ОБРАБАТЫВАЕМ ОБЫЧНЫЕ КОМАНДЫ
-                if (text.equals(Puzzles.riddles[0]) || text.equals(Puzzles.riddles[1]) || text.equals(Puzzles.riddles[2])) {
+                    return;
+                }else if (text.equals(Puzzles.riddles[0]) || text.equals(Puzzles.riddles[1]) || text.equals(Puzzles.riddles[2])) {
                     sendMessage(chatId, text);
                     currentRiddle.put(chatId, text);
                     waitingForAnswer.add(chatId);
@@ -160,12 +156,12 @@ public class TelegramInteraction extends TelegramLongPollingBot {
 
         Game currentGame = games.get(chatId);
         if  (currentGame.getVictim1Status() == Victim.Status.ALIVE) {
-            KeyboardButton button4 = new KeyboardButton(characterNames[4]);
+            KeyboardButton button4 = new KeyboardButton(characterNames[3]);
             rows[1].add(button4);
         }
 
         if (currentGame.getVictim2Status() == Victim.Status.ALIVE) {
-            KeyboardButton button5 = new KeyboardButton(characterNames[3]);
+            KeyboardButton button5 = new KeyboardButton(characterNames[4]);
             rows[1].add(button5);
         }
 
