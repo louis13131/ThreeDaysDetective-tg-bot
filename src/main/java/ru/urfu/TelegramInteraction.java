@@ -73,7 +73,7 @@ public class TelegramInteraction extends TelegramLongPollingBot {
 
             if (text.equals("Игра началась")){
                 currentGame.setGameStatus(true);
-                sendMessageWithCommandButtons(Strings.welcomeMessage, chatId);
+                sendMessageWithCommandButtons(games.get(chatId).generateWelcomeMessage(), chatId);
             }
         }
     }
@@ -111,9 +111,10 @@ public class TelegramInteraction extends TelegramLongPollingBot {
     }
 
     private void sendMessageWithCharacterButtons(String text, String chatId){
-        KeyboardButton button1 = new KeyboardButton("Lidia");
-        KeyboardButton button2 = new KeyboardButton("Anna");
-        KeyboardButton button3 = new KeyboardButton("Dmitriy");
+        String[] characterNames = games.get(chatId).getCharacterNames();
+        KeyboardButton button1 = new KeyboardButton(characterNames[0]);
+        KeyboardButton button2 = new KeyboardButton(characterNames[1]);
+        KeyboardButton button3 = new KeyboardButton(characterNames[2]);
 
         KeyboardRow[] rows = new KeyboardRow[2];
         rows[0] = new KeyboardRow();
@@ -124,11 +125,11 @@ public class TelegramInteraction extends TelegramLongPollingBot {
 
         Game currentGame = games.get(chatId);
         if (currentGame.getPetrStatus() == Victim.Status.ALIVE) {
-            KeyboardButton button4 = new KeyboardButton("Petr");
+            KeyboardButton button4 = new KeyboardButton(characterNames[3]);
             rows[1].add(button4);
         }
         if  (currentGame.getGrigoriyStatus() == Victim.Status.ALIVE) {
-            KeyboardButton button5 = new KeyboardButton("Grigoriy");
+            KeyboardButton button5 = new KeyboardButton(characterNames[4]);
             rows[1].add(button5);
         }
         sendMessageWithButtons(rows, text, chatId);
