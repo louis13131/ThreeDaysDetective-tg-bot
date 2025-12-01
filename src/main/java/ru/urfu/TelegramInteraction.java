@@ -124,14 +124,16 @@ public class TelegramInteraction extends TelegramLongPollingBot {
         rows[0].add(button3);
 
         Game currentGame = games.get(chatId);
-        if (currentGame.getPetrStatus() == Victim.Status.ALIVE) {
-            KeyboardButton button4 = new KeyboardButton(characterNames[3]);
+        if  (currentGame.getVictim1Status() == Victim.Status.ALIVE) {
+            KeyboardButton button4 = new KeyboardButton(characterNames[4]);
             rows[1].add(button4);
         }
-        if  (currentGame.getGrigoriyStatus() == Victim.Status.ALIVE) {
-            KeyboardButton button5 = new KeyboardButton(characterNames[4]);
+
+        if (currentGame.getVictim2Status() == Victim.Status.ALIVE) {
+            KeyboardButton button5 = new KeyboardButton(characterNames[3]);
             rows[1].add(button5);
         }
+
         sendMessageWithButtons(rows, text, chatId);
     }
 

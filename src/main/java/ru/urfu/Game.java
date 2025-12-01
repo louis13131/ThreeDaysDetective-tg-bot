@@ -206,12 +206,12 @@ public class Game {
         return isRunning;
     }
 
-    public Victim.Status getPetrStatus(){
-        return victim2.getStatus();
+    public Victim.Status getVictim1Status(){
+        return victim1.getStatus();
     }
 
-    public Victim.Status getGrigoriyStatus(){
-        return victim1.getStatus();
+    public Victim.Status getVictim2Status(){
+        return victim2.getStatus();
     }
 
     public Day getCurrentDay(){
