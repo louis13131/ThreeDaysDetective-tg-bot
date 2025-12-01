@@ -8,14 +8,16 @@ public abstract class Human {
     private final String profession;
     private final String impression;
     private final String reason;
+    private final String[] dialogues;
 
-    protected Human(String[] nameParts, String[] character) {
+    protected Human(String[] nameParts, String[] character, String[] dialogues) {
         this.name = nameParts[0];
         this.surname = nameParts[1];
         this.age = character[0];
         this.profession = character[1];
         this.impression = character[2];
         this.reason = character[3];
+        this.dialogues = dialogues;
     }
 
     public String getInfo(){
@@ -25,8 +27,13 @@ public abstract class Human {
     public String getName(){
         return name;
     }
+
     public String getFullName(){
         String fullName = name + " " + surname;
         return fullName;
+    }
+
+    public String getDialogueByDay(Day currentDay){
+        return dialogues[currentDay.ordinal()];
     }
 }
