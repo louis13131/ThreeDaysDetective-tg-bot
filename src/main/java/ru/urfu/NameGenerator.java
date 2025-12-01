@@ -5,13 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NameGenerator {
-
-    public static void main(String[] args) throws IOException, InterruptedException {
-        ApiClient apiClient = new ApiClient();
-        Name[] male = apiClient.findMale().toArray(new Name[0]);
-        System.out.println(Arrays.toString(male));
-    }
-
     public String[][] generateMaleNames() {
         try {
             ApiClient apiClient = new ApiClient();
@@ -36,10 +29,10 @@ public class NameGenerator {
 
     private String[][] getBackupMaleNames() {
         return new String[][] {
-                {"Виктор", "Воронов"},
-                {"Григорий", "Жаров"},
-                {"Петр", "Воронов"},
-                {"Дмитрий", "Орлов"}
+                {"Viktor", "Voronov"},
+                {"Grigoriy", "Zharov"},
+                {"Petr", "Voronov"},
+                {"Dmitriy", "Orlov"}
         };
     }
 
@@ -67,8 +60,8 @@ public class NameGenerator {
 
     private String[][] getBackupFemaleNames() {
         return new String[][] {
-                {"Лидия", "Черткова"},
-                {"Анна", "Воронова"}
+                {"Lidia", "Chertkova"},
+                {"Anna", "Voronova"}
         };
     }
 }
