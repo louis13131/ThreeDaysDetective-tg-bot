@@ -38,6 +38,20 @@ public class ProcessMain
                             answer = game.processCommandInGame(instruction);
                         }
 
+                        if (answer.equals(Puzzles.riddles[0]) || answer.equals(Puzzles.riddles[1]) || answer.equals(Puzzles.riddles[2])){
+                            consoleInteraction.print(answer);
+                            while (true) {
+                                instruction = consoleInteraction.getCommand();
+                                answer = game.inspect(instruction);
+                                if (answer.equals(Puzzles.rightDecision[0]) || answer.equals(Puzzles.rightDecision[1]) || answer.equals(Puzzles.rightDecision[2])) {
+                                    answer += game.processCommandInGame("/inspect");
+                                    break;
+                                } else {
+                                    consoleInteraction.print("Попробуйте ещё раз");
+                                }
+                            }
+                        }
+
                         consoleInteraction.print(answer);
 
                         if (answer.equals("Игра завершена") || answer.equals(Strings.defeatMessage) || answer.equals(Strings.victoryMessage)) {

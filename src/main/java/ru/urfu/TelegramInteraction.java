@@ -8,15 +8,14 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class TelegramInteraction extends TelegramLongPollingBot {
 
     HashMap<String, Game> games;
     private String token;
+    private Set<String> waitingForAnswer = new HashSet<>();
+    private Map<String, String> currentRiddle = new HashMap<>();
 
     TelegramInteraction(String token) {
         this.token = token;
@@ -56,6 +55,30 @@ public class TelegramInteraction extends TelegramLongPollingBot {
                 if (text.equals("Введите имя персонажа:")){
                     sendMessageWithCharacterButtons(text, chatId);
                 }
+                if (waitingForAnswer.contains(chatId)) {
+                    String answer = messageText;
+                    String riddle = currentRiddle.get(chatId);
+
+                    String result = currentGame.inspect(answer);
+
+                    if (result.equals("No")) {
+                        sendMessage(chatId, "Попробуйте ещё раз.");
+                    } else {
+                        String additional = currentGame.processCommandInGame("/inspect");
+                        sendMessage(chatId, result + additional);
+                        waitingForAnswer.remove(chatId);
+                        currentRiddle.remove(chatId);
+                    }
+                    return; // Выходим, не обрабатываем дальше
+                }
+
+                // 2. ОБРАБАТЫВАЕМ ОБЫЧНЫЕ КОМАНДЫ
+                if (text.equals(Puzzles.riddles[0]) || text.equals(Puzzles.riddles[1]) || text.equals(Puzzles.riddles[2])) {
+                    sendMessage(chatId, text);
+                    currentRiddle.put(chatId, text);
+                    waitingForAnswer.add(chatId);
+                    sendMessage(chatId, "Введите ваш ответ:");
+                }
                 else if (!text.equals("Игра завершена")){
                     sendMessageWithCommandButtons(text, chatId);
                 }
@@ -75,6 +98,18 @@ public class TelegramInteraction extends TelegramLongPollingBot {
                 currentGame.setGameStatus(true);
                 sendMessageWithCommandButtons(games.get(chatId).generateWelcomeMessage(), chatId);
             }
+        }
+    }
+
+    private void sendMessage(String chatId, String text) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText(text);
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 

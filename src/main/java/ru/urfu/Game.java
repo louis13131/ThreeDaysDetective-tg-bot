@@ -16,10 +16,11 @@ public class Game {
     private Day currentDay;
 
     String prevCommand;
-    String evidence = "";
     private boolean isRunning = false;
     private boolean waitingForName = false;
+    private boolean waitingAnswer = false;
     private boolean flagDayShift = false;
+    Evidence evidence = new Evidence();
 
     public Game() {
         nameGenerator = new NameGenerator();
@@ -55,6 +56,12 @@ public class Game {
             return "Введите имя персонажа:";
         }
 
+        if (instruction.equals("/inspect")){
+            if (!waitingAnswer){
+                return Puzzles.riddles[currentDay.ordinal()];
+            }
+        }
+
         if (!waitingForName){
             answer = processSingleCommand(instruction);
         }
@@ -79,22 +86,22 @@ public class Game {
             case "/inspect" -> {
                 if (!flagDayShift){
                     flagDayShift = true;
-                    evidence += Strings.evidence[currentDay.ordinal()];
-                    yield Strings.inspection[currentDay.ordinal()];
+                    yield evidence.inspection(currentDay.ordinal());
                 }
                 else{
                     yield "Вы уже нашли все улики сегодня";
                 }
             }
             case "/clue" -> {
-                if ("".equals(evidence)) {
+                if ("".equals(evidence.evidenceFound)) {
                     yield "Вы ещё не нашли улик";
-                } else {;
-                    yield evidence;
+                } else {
+                    yield evidence.evidenceFound;
                 }
             }
             case "/end_the_day" -> {
                 flagDayShift = false;
+                waitingAnswer = false;
                 yield endTheDay();
             }
             case "/exit" -> "Игра завершена";
@@ -102,6 +109,15 @@ public class Game {
         };
 
         return answer;
+    }
+
+    String inspect(String answer){
+        int day = currentDay.ordinal() * 2;
+        if (answer.equals(Puzzles.answers[day]) || answer.equals(Puzzles.answers[day + 1])){
+            waitingAnswer = true;
+            return Puzzles.rightDecision[currentDay.ordinal()];
+        }
+        return "No";
     }
 
     String processCharacterCommand(String instruction, Human character){
