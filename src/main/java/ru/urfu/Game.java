@@ -1,16 +1,15 @@
 package ru.urfu;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Game {
     private Killer killer;
     private String[] firstVictimFullName;
-    private Victim dmitriyOrlov;
-    private Victim annaVoronova;
-    private Victim petrVoronov;
-    private Victim grigoriyZharov;
+    private RedHerring redHerring1;
+    private RedHerring redHerring2;
+    private Victim victim1;
+    private Victim victim2;
     List<Human> characters;
     private NameGenerator nameGenerator;
 
@@ -37,12 +36,12 @@ public class Game {
 
         firstVictimFullName = maleNames[0];
         killer = new Killer(femaleNames[0], Strings.killer, Strings.killerDialoguesByDay);
-        dmitriyOrlov = new Victim(maleNames[1], Strings.dmitriy, Strings.redHerring1DialoguesByDay);
-        annaVoronova = new Victim(familyFemaleName, Strings.anna, Strings.redHerring2DialoguesByDay);
-        petrVoronov = new Victim(familyMaleName, Strings.petr, Strings.victim2DialoguesByDay);
-        grigoriyZharov = new Victim(maleNames[3], Strings.grigoriy, Strings.victim1DialoguesByDay);
+        redHerring1 = new RedHerring(maleNames[1], Strings.dmitriy, Strings.redHerring1DialoguesByDay);
+        redHerring2 = new RedHerring(familyFemaleName, Strings.anna, Strings.redHerring2DialoguesByDay);
+        victim1 = new Victim(maleNames[3], Strings.grigoriy, Strings.victim1DialoguesByDay);
+        victim2 = new Victim(familyMaleName, Strings.petr, Strings.victim2DialoguesByDay);
 
-        characters = List.of(killer, dmitriyOrlov, annaVoronova, petrVoronov, grigoriyZharov);
+        characters = List.of(killer, redHerring1, redHerring2, victim1, victim2);
 
         currentDay = Day.DAY1;
     }
@@ -126,7 +125,7 @@ public class Game {
             String answer = "";
             if (character instanceof Killer){
                 answer = Strings.victoryMessage;
-            }else if (character instanceof Victim){
+            }else if (character instanceof RedHerring){
                 answer = Strings.defeatMessage;
             }
             return answer;
@@ -147,10 +146,10 @@ public class Game {
         answer = generateDailyMessage();
 
         if  (currentDay == Day.DAY2){
-            grigoriyZharov.setStatusToDead();
+            victim1.setStatusToDead();
         }
         else {
-            petrVoronov.setStatusToDead();
+            victim2.setStatusToDead();
         }
 
         return answer;
@@ -167,10 +166,10 @@ public class Game {
         String dailyMessage = "";
 
         if (currentDay == Day.DAY2){
-            dailyMessage = String.format(currentDayMessageTemplate, grigoriyZharov.getFullName());
+            dailyMessage = String.format(currentDayMessageTemplate, victim1.getFullName());
         }
         if (currentDay == Day.DAY3){
-            dailyMessage = String.format(currentDayMessageTemplate, petrVoronov.getFullName());
+            dailyMessage = String.format(currentDayMessageTemplate, victim2.getFullName());
         }
         return dailyMessage;
     }
@@ -208,11 +207,11 @@ public class Game {
     }
 
     public Victim.Status getPetrStatus(){
-        return petrVoronov.getStatus();
+        return victim2.getStatus();
     }
 
     public Victim.Status getGrigoriyStatus(){
-        return grigoriyZharov.getStatus();
+        return victim1.getStatus();
     }
 
     public Day getCurrentDay(){
