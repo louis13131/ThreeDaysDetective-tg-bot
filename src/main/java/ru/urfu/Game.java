@@ -143,6 +143,8 @@ public class Game {
                 answer = Strings.victoryMessage;
             }else if (character instanceof RedHerring){
                 answer = Strings.defeatMessage;
+            }else if (character instanceof Victim){
+                answer = "Этот персонаж мёртв, его нельзя обвинить";
             }
             return answer;
         }
