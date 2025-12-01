@@ -1,13 +1,17 @@
 package ru.urfu;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Game {
-    private Killer lidiaChertkova;
+    private Killer killer;
+    private String[] firstVictimFullName;
     private Victim dmitriyOrlov;
     private Victim annaVoronova;
     private Victim petrVoronov;
     private Victim grigoriyZharov;
+    List<Human> characters;
     private NameGenerator nameGenerator;
 
     private Day currentDay;
@@ -31,11 +35,15 @@ public class Game {
         familyFemaleName[1] = familySurname;
         familyMaleName[1] = familySurname;
 
-        lidiaChertkova = new Killer(femaleNames[0], Strings.lidia);
-        dmitriyOrlov = new Victim(maleNames[1], Strings.dmitriy);
-        annaVoronova = new Victim(familyFemaleName, Strings.anna);
-        petrVoronov = new Victim(familyMaleName, Strings.petr);
-        grigoriyZharov = new Victim(maleNames[3], Strings.grigoriy);
+        firstVictimFullName = maleNames[0];
+        killer = new Killer(femaleNames[0], Strings.killer, Strings.killerDialoguesByDay);
+        dmitriyOrlov = new Victim(maleNames[1], Strings.dmitriy, Strings.redHerring1DialoguesByDay);
+        annaVoronova = new Victim(familyFemaleName, Strings.anna, Strings.redHerring2DialoguesByDay);
+        petrVoronov = new Victim(familyMaleName, Strings.petr, Strings.victim2DialoguesByDay);
+        grigoriyZharov = new Victim(maleNames[3], Strings.grigoriy, Strings.victim1DialoguesByDay);
+
+        characters = List.of(killer, dmitriyOrlov, annaVoronova, petrVoronov, grigoriyZharov);
+
         currentDay = Day.DAY1;
     }
 
@@ -52,7 +60,13 @@ public class Game {
             answer = processSingleCommand(instruction);
         }
         else {
-            answer = processCharacterCommand(prevCommand, instruction);
+            Human character = findCharacterByName(instruction);
+
+            if  (character != null) {
+                answer = processCharacterCommand(prevCommand, character);
+            }else{
+                answer = "Такого персонажа не существует";
+            }
             waitingForName = false;
         }
 
@@ -91,60 +105,30 @@ public class Game {
         return answer;
     }
 
-    String processCharacterCommand(String instruction, String name){
+    String processCharacterCommand(String instruction, Human character){
         String answer = switch(instruction){
-            case "/info" -> infoAboutCharacter(name);
-            case "/talk" -> talkToCharacter(name);
-            case "/blame" -> blameCharacter(name);
+            case "/info" -> character.getInfo();
+            case "/talk" -> talkToCharacter(character);
+            case "/blame" -> blameCharacter(character);
             default -> "Такого персонажа не существует";
         };
 
         return answer;
     }
 
-    public String infoAboutCharacter(String name) {
-        String answer = switch (name) {
-            case "lidia", "Lidia" -> lidiaChertkova.getInfo();
-            case "dmitriy", "Dmitriy" -> dmitriyOrlov.getInfo();
-            case "anna", "Anna" -> annaVoronova.getInfo();
-            case "petr", "Petr" -> petrVoronov.getInfo();
-            case "grigoriy", "Grigoriy" -> grigoriyZharov.getInfo();
-            default -> "Такого персонажа не существует";
-        };
+    public String talkToCharacter(Human character){
+        String answer = character.getDialogueByDay(currentDay);
         return answer;
     }
 
-    public String talkToCharacter(String name){
-        String answer = switch (name) {
-            case "lidia", "Lidia" -> Strings.lidiaDialoguesByDay[currentDay.ordinal()];
-            case "dmitriy", "Dmitriy" -> Strings.dmitriyDialoguesByDay[currentDay.ordinal()];
-            case "anna", "Anna" -> Strings.annaDialoguesByDay[currentDay.ordinal()];
-            case "petr", "Petr" -> {
-                if(petrVoronov.getStatus() == Victim.Status.ALIVE){
-                    yield Strings.petrDialoguesByDay[currentDay.ordinal()];
-                }
-                yield Strings.deathMessage;
-            }
-            case "grigoriy", "Grigoriy" -> {
-                if(grigoriyZharov.getStatus() == Victim.Status.ALIVE){
-                    yield Strings.grigoriyDialoguesByDay[currentDay.ordinal()];
-                }
-                yield Strings.deathMessage;
-            }
-            default -> "Такого персонажа не существует";
-        };
-        return answer;
-    }
-
-    public String blameCharacter(String name){
+    public String blameCharacter(Human character){
         if (currentDay == Day.DAY3){
-            String answer = switch (name){
-                case "lidia", "Lidia" -> Strings.victoryMessage;
-                case "dmitriy", "Dmitriy" -> Strings.defeatMessage;
-                case "anna", "Anna" -> Strings.defeatMessage;
-                case "petr", "Petr", "grigoriy", "Grigoriy" -> "Этот персонаж мёртв, его нельзя обвинить";
-                default -> "Такого персонажа не существует";
-            };
+            String answer = "";
+            if (character instanceof Killer){
+                answer = Strings.victoryMessage;
+            }else if (character instanceof Victim){
+                answer = Strings.defeatMessage;
+            }
             return answer;
         }
 
@@ -160,7 +144,7 @@ public class Game {
             return "Это последний день";
         }
 
-        answer = Strings.dailyMessage[currentDay.ordinal()-1];
+        answer = generateDailyMessage();
 
         if  (currentDay == Day.DAY2){
             grigoriyZharov.setStatusToDead();
@@ -170,6 +154,49 @@ public class Game {
         }
 
         return answer;
+    }
+
+    public String generateWelcomeMessage(){
+        String welcomeMessage = String.format(Strings.welcomeMessageTemplate, firstVictimFullName[1],
+                firstVictimFullName[0] + " " + firstVictimFullName[1], getCharacterFullNames());
+        return welcomeMessage;
+    }
+
+    public String generateDailyMessage(){
+        String currentDayMessageTemplate = Strings.dailyMessagesTemplate[currentDay.ordinal() - 1];
+        String dailyMessage = "";
+
+        if (currentDay == Day.DAY2){
+            dailyMessage = String.format(currentDayMessageTemplate, grigoriyZharov.getFullName());
+        }
+        if (currentDay == Day.DAY3){
+            dailyMessage = String.format(currentDayMessageTemplate, petrVoronov.getFullName());
+        }
+        return dailyMessage;
+    }
+
+    public Human findCharacterByName(String name){
+        for (Human character : characters){
+            if (character.getName().equals(name)){
+                return character;
+            }
+        }
+        return null;
+    }
+
+
+    public String[] getCharacterNames(){
+        String[] characterNames = new String[characters.size()];
+        for (int i = 0; i < characters.size(); i++){
+            characterNames[i] = characters.get(i).getName();
+        }
+        return characterNames;
+    }
+
+    public String getCharacterFullNames(){
+        return characters.stream()
+                .map(Human::getFullName)
+                .collect(Collectors.joining(", "));
     }
 
     public void setGameStatus(boolean isRunning){
