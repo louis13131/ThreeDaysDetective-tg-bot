@@ -193,4 +193,98 @@ public class GameTest {
         result = game.processCommandInGame(victim1.getName());
         Assertions.assertEquals(Strings.deathMessage, result);
     }
+
+    @Test
+    public void getAnswerInGameInspectTest() {
+        Game game = new Game();
+        Evidence evidence = new Evidence();
+        String result = game.processCommandInGame("/inspect");
+        String expected = Puzzles.riddles[0];
+        Assertions.assertEquals(expected, result);
+        result = game.inspect("Талант");
+        expected = Puzzles.rightDecision[0];
+        Assertions.assertEquals(expected, result);
+        result = game.processCommandInGame("/inspect");
+        expected = evidence.inspection(0);
+        Assertions.assertEquals(expected, result);
+        result = game.processCommandInGame("/inspect");
+        expected = "Вы уже нашли все улики сегодня";
+        Assertions.assertEquals(expected, result);
+        game.processCommandInGame("/end_the_day");
+        result = game.processCommandInGame("/inspect");
+        expected = Puzzles.riddles[1];
+        Assertions.assertEquals(expected, result);
+        result = game.inspect("часы");
+        expected = Puzzles.rightDecision[1];
+        Assertions.assertEquals(expected, result);
+        result = game.processCommandInGame("/inspect");
+        expected = evidence.inspection(1);
+        Assertions.assertEquals(expected, result);
+        result = game.processCommandInGame("/inspect");
+        expected = "Вы уже нашли все улики сегодня";
+        Assertions.assertEquals(expected, result);
+        game.processCommandInGame("/end_the_day");
+        result = game.processCommandInGame("/inspect");
+        expected = Puzzles.riddles[2];
+        Assertions.assertEquals(expected, result);
+        result = game.inspect("следов");
+        expected = Puzzles.rightDecision[2];
+        Assertions.assertEquals(expected, result);
+        result = game.processCommandInGame("/inspect");
+        expected = evidence.inspection(2);
+        Assertions.assertEquals(expected, result);
+        result = game.processCommandInGame("/inspect");
+        expected = "Вы уже нашли все улики сегодня";
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    public void getAnswerInGameClueAllTest() {
+        Game game = new Game();
+        String result = game.processCommandInGame("/clue");
+        String expected = "Вы ещё не нашли улик";
+        Assertions.assertEquals(expected, result);
+        game.processCommandInGame("/inspect");
+        game.inspect("талант");
+        game.processCommandInGame("/inspect");
+        result = game.processCommandInGame("/clue");
+        expected = "Улика 1: " + Evidence.evidence[0] + "\n" + "Улика 2: " + Evidence.evidence[1] + "\n" + "Улика 3: " + Evidence.evidence[2] + "\n";
+        Assertions.assertEquals(expected, result);
+        game.processCommandInGame("/end_the_day");
+        game.processCommandInGame("/inspect");
+        game.inspect("Часы");
+        game.processCommandInGame("/inspect");
+        result = game.processCommandInGame("/clue");
+        expected += "Улика 4: " + Evidence.evidence[3] + "\n" + "Улика 5: " + Evidence.evidence[4] + "\n" + "Улика 6: " + Evidence.evidence[5] + "\n";
+        Assertions.assertEquals(expected, result);
+        game.processCommandInGame("/end_the_day");
+        game.processCommandInGame("/inspect");
+        game.inspect("следов");
+        game.processCommandInGame("/inspect");
+        result = game.processCommandInGame("/clue");
+        expected += "Улика 7: " + Evidence.evidence[6] + "\n" + "Улика 8: " + Evidence.evidence[7] + "\n" + "Улика 9: " + Evidence.evidence[8] + "\n";
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    public void getAnswerInGameClueNotAllTest() {
+        Game game = new Game();
+        String result = game.processCommandInGame("/clue");
+        String expected = "Вы ещё не нашли улик";
+        Assertions.assertEquals(expected, result);
+        game.processCommandInGame("/inspect");
+        game.inspect("талант");
+        game.processCommandInGame("/inspect");
+        result = game.processCommandInGame("/clue");
+        expected = "Улика 1: " + Evidence.evidence[0] + "\n" + "Улика 2: " + Evidence.evidence[1] + "\n" + "Улика 3: " + Evidence.evidence[2] + "\n";
+        Assertions.assertEquals(expected, result);
+        game.processCommandInGame("/end_the_day");
+        game.processCommandInGame("/end_the_day");
+        game.processCommandInGame("/inspect");
+        game.inspect("следов");
+        game.processCommandInGame("/inspect");
+        result = game.processCommandInGame("/clue");
+        expected += "Улика 4: " + Evidence.evidence[6] + "\n" + "Улика 5: " + Evidence.evidence[7] + "\n" + "Улика 6: " + Evidence.evidence[8] + "\n";
+        Assertions.assertEquals(expected, result);
+    }
 }
