@@ -2,8 +2,7 @@ package ru.urfu;
 
 public class Killer extends Human {
 
-    protected Killer(String[] character) {
-        super(character);
-
+    protected Killer(String[] nameParts, String[] character, String[] dialogues) {
+        super(nameParts, character, dialogues);
     }
 }

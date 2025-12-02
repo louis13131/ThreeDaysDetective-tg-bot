@@ -8,17 +8,32 @@ public abstract class Human {
     private final String profession;
     private final String impression;
     private final String reason;
+    private final String[] dialogues;
 
-    protected Human(String[] character) {
-        this.name = character[0];
-        this.surname = character[1];
-        this.age = character[2];
-        this.profession = character[3];
-        this.impression = character[4];
-        this.reason = character[5];
+    protected Human(String[] nameParts, String[] character, String[] dialogues) {
+        this.name = nameParts[0];
+        this.surname = nameParts[1];
+        this.age = character[0];
+        this.profession = character[1];
+        this.impression = character[2];
+        this.reason = character[3];
+        this.dialogues = dialogues;
     }
 
     public String getInfo(){
         return String.format("--- Информация о %s %s --- \n%s лет \nРод занятий: %s \nОписание: %s \nМотив: %s", name, surname, age, profession, impression, reason);
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getFullName(){
+        String fullName = name + " " + surname;
+        return fullName;
+    }
+
+    public String getDialogueByDay(Day currentDay){
+        return dialogues[currentDay.ordinal()];
     }
 }
