@@ -14,5 +14,4 @@ WORKDIR /app
 
 COPY --from=build /app/target/ThreeDaysDetective-tg-bot-1.0-SNAPSHOT.jar /app/bot.jar
 
-ENTRYPOINT ["java", "-jar", "bot.jar"]
-CMD ["${BOT_TOKEN}", "telegram"]
+CMD ["/bin/sh", "-c", "java -jar bot.jar ${BOT_TOKEN} telegram"]
